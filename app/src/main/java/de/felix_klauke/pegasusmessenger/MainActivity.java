@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-
+        networkManager.getNettyClient().disconnect();
     }
 
     public static boolean isLoggedIn() {
