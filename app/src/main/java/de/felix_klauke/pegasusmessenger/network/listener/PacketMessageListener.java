@@ -18,7 +18,7 @@ public class PacketMessageListener implements PacketListener<PacketMessage> {
 
     @Override
     public void handlePacket(Channel channel, PacketMessage packetMessage) {
-        viewManager.postMessage(packetMessage.getAuthor(), packetMessage.getAuthor());
+        viewManager.postMessage(packetMessage.getAuthor(), packetMessage.getMessage());
     }
 
 }

@@ -1,5 +1,6 @@
 package de.felix_klauke.pegasusmessenger;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,9 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import de.felix_klauke.pegasus.protocol.packets.PacketHandshake;
 import de.felix_klauke.pegasus.protocol.packets.PacketHandshakeResponse;
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -45,18 +50,30 @@ public class MainActivity extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.sendButton);
         button.setOnClickListener(new SendButtonClickListener(networkManager, viewManager));
 
-        new AsyncTask<Void, Void, Void>() {
+        /*new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 networkManager.connect();
                 return null;
             }
-        }.execute();
+        }.execute();*/
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                networkManager.connect();
+            }
+        });
 
         networkManager.registerListener(new PacketMessageListener(viewManager), PacketMessage.class);
         networkManager.registerListener(new PacketHandshakeResponseListener(viewManager), PacketHandshakeResponse.class);
 
         viewManager.showNotification("", String.valueOf(networkManager.getNettyClient().getPacketHandler().getListeners().size()));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
     }
 
     public static boolean isLoggedIn() {

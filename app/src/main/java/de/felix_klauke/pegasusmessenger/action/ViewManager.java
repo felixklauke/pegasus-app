@@ -37,24 +37,34 @@ public class ViewManager {
         chatAdapter.append(message);
     }
 
-    public void postMessage(String username, String message) {
-        postMessage("[" + getDate() + "] " + username + ": " + message);
+    public void postMessage(final String username, final String message) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                postMessage("[" + getDate() + "] " + username + ": " + message);
+            }
+        });
     }
 
     public String getDate() {
         return new SimpleDateFormat("HH:mm").format(new Date());
     }
 
-    public void showNotification(String title, String message) {
-        new AlertDialog.Builder(activity)
-                .setTitle(title)
-                .setMessage(message)
-                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
+    public void showNotification(final String title, final String message) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new AlertDialog.Builder(activity)
+                        .setTitle(title)
+                        .setMessage(message)
+                        .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
     }
 }
