@@ -12,7 +12,7 @@ import de.felix_klauke.pegasusmessenger.action.ViewManager;
 /**
  * Created by Klauke on 14.02.2016.
  */
-public class NetworkManager extends AsyncTask<String, Void, Void> {
+public class NetworkManager {
 
     private Client client;
     private NettyClient nettyClient;
@@ -20,12 +20,6 @@ public class NetworkManager extends AsyncTask<String, Void, Void> {
     public NetworkManager() {
         client = new Client();
         nettyClient = client.getNettyClient();
-    }
-
-    @Override
-    protected Void doInBackground(String... params) {
-        connect();
-        return null;
     }
 
     public void connect() {

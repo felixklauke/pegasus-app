@@ -1,5 +1,7 @@
 package de.felix_klauke.pegasusmessenger;
 
+import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -29,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         networkManager = new NetworkManager();
 
         ListView listView = (ListView) findViewById(R.id.chatView);
@@ -40,7 +45,13 @@ public class MainActivity extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.sendButton);
         button.setOnClickListener(new SendButtonClickListener(networkManager, viewManager));
 
-        networkManager.execute("");
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                networkManager.connect();
+                return null;
+            }
+        }.execute();
 
         networkManager.registerListener(new PacketMessageListener(viewManager), PacketMessage.class);
         networkManager.registerListener(new PacketHandshakeResponseListener(viewManager), PacketHandshakeResponse.class);
